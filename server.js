@@ -3,11 +3,15 @@
 const express = require('express')
 const router = express.Router()
 const connectDB = require ('./config/db')
+const {check, validationResult} = require('express-validator/check')
 
 const app = express()
 
 //connect DB
 connectDB()
+
+//Initialise Middleware
+app.use(express.json({extended: false}))
 
 app.get('/', (req, res)=> res.send('API RUNNING'))
 
