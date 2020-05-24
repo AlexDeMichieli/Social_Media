@@ -9,6 +9,9 @@ const app = express()
 //connect DB
 connectDB()
 
+//Initialise Middleware
+app.use(express.json({extended: false}))
+
 app.get('/', (req, res)=> res.send('API RUNNING'))
 
 //Setting port
