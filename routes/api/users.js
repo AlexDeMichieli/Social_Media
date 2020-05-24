@@ -60,15 +60,11 @@ async (req,res) => {
         }
     }
 
-    jwt.sign( payload, 
-              process.env.jwtSecret,
-              {expiresIn: 360000},
-              (err, token)=> {
-                    if(err) throw err,
-                    res.json({token});
-              }  
-              
-            )
+    jwt.sign({user:payload}, process.env.jwtSecret, {expiresIn: 360000}, (err, token)=>{
+        if(err) throw err
+        res.send({token: token})
+    })
+
 
     } catch(err) {
       console.error(err.message)
@@ -76,7 +72,6 @@ async (req,res) => {
     }
 })
 
- 
 
         // User.find({}, function(err, users) {
         //     if (err) throw err;
