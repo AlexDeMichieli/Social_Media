@@ -6,8 +6,6 @@ const {check, validationResult} = require('express-validator/check');
 var jwt = require('jsonwebtoken');
 require('dotenv/config')
 const axios = require('axios')
-
-
 const User = require ('../../models/User');
 
 // public user route
@@ -60,7 +58,7 @@ async (req,res) => {
         }
     }
 
-    jwt.sign({user:payload}, process.env.jwtSecret, {expiresIn: 360000}, (err, token)=>{
+    jwt.sign({user: payload}, process.env.jwtSecret, {expiresIn: 360000}, (err, token)=>{
         if(err) throw err
         res.send({token: token})
     })
