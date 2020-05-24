@@ -3,7 +3,6 @@
 const express = require('express')
 const router = express.Router()
 const connectDB = require ('./config/db')
-const {check, validationResult} = require('express-validator/check')
 
 const app = express()
 

@@ -22,7 +22,7 @@ Icon
 .VolumeIcon.icns
 .env
 .com.apple.timemachine.donotpresent
-
+.json
 # Directories potentially created on remote AFP share
 .AppleDB
 .AppleDesktop
