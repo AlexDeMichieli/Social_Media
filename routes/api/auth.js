@@ -5,28 +5,30 @@ const User = require ('../../models/User');
 const {check, validationResult} = require('express-validator/check');
 const bcrypt = require("bcryptjs")
 var jwt = require('jsonwebtoken');
-
 require('dotenv/config')
 
 
 //Reserved auth route
 //adding the middleware 'auth' makes the route protected
+//Finds user in DB and returns JWT
+
 router.get('/', auth, async (req, res) => {
 
-
-    try{
+    try {
         //returns user, leaves out the password
         const user = await User.findById(req.user.user.id).select('-password');
         const data = await res.json({user: user})
 
-    }catch(err){
+    } catch(err) {
         console.error(err.message)
         res.status(500).send('Server Error')
     }
 })
 
+
 //Post Request api/auth
-// Authenticate user & get token
+//Simulates login with Email and Password
+// Authenticates user & gets token
 
 router.post('/', [
     check('email', 'Please include a valid Email address').isEmail(),
@@ -35,7 +37,7 @@ router.post('/', [
 async (req,res) => {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
+    if(!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
@@ -70,7 +72,6 @@ async (req,res) => {
             if(err) throw err
             res.send({token: token})
         })
-
 
     } catch(err) {
         console.error(err.message)

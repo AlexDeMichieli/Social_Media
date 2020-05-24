@@ -9,7 +9,7 @@ const axios = require('axios')
 const User = require ('../../models/User');
 
 // public user route
-//register user
+//register user and returns JWT
 
 router.post('/', [
     check('name', 'Name is required').not().isEmpty(),
