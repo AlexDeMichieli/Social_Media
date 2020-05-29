@@ -10,6 +10,7 @@ require('dotenv/config')
 
 //Reserved auth route
 //adding the middleware 'auth' makes the route protected
+//using middleware for authentication
 //Finds user in DB and returns JWT
 
 router.get('/', auth, async (req, res) => {
