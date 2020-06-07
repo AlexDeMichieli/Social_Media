@@ -53,13 +53,14 @@ async (req,res) => {
     user.password = await bcrypt.hash(password, salt);
     await user.save()
 
-    //Return JWT
+    //Taking ID from new user created
     const payload = {
         user: {
             id: user.id
         }
     }
 
+    //assigning JTW to new user and returning JWT in console
     jwt.sign({user: payload}, process.env.jwtSecret, {expiresIn: 360000}, (err, token)=>{
         if(err) throw err
         res.send({token: token})
