@@ -66,7 +66,6 @@ async (req,res) => {
         res.send({token: token})
     })
 
-
     } catch(err) {
       console.error(err.message)
       res.status(500).send('Server Error')

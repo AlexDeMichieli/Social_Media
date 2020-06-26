@@ -19,6 +19,7 @@ router.get('/', auth, async (req, res) => {
         //returns user, leaves out the password
         const user = await User.findById(req.user.user.id).select('-password');
         const data = await res.json({user: user})
+        console.log('got user')
 
     } catch(err) {
         console.error(err.message)
