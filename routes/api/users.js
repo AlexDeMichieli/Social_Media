@@ -8,8 +8,9 @@ require('dotenv/config')
 const axios = require('axios')
 const User = require ('../../models/User');
 
+//First step ==> Registering user
 // public user route
-//register user and returns JWT
+//registers user and returns JWT
 
 router.post('/', [
     check('name', 'Name is required').not().isEmpty(),
@@ -26,7 +27,7 @@ async (req,res) => {
     const {name, email, password} = req.body
 
     try {
-    //check if user exists
+    //check if user exists in Mongoose
         let user = await User.findOne({email});
         if(user) {
             return res.status(400).json({errors: [{msg: 'User already exists'}]})
@@ -39,6 +40,7 @@ async (req,res) => {
         d: 'mm'
     })
 
+    //creates username following Schema
     user = new User({
         name,
         email,
@@ -51,18 +53,18 @@ async (req,res) => {
     user.password = await bcrypt.hash(password, salt);
     await user.save()
 
-    //Return JWT
+    //Taking ID from new user created
     const payload = {
         user: {
             id: user.id
         }
     }
 
+    //assigning JTW to new user and returning JWT in console
     jwt.sign({user: payload}, process.env.jwtSecret, {expiresIn: 360000}, (err, token)=>{
         if(err) throw err
         res.send({token: token})
     })
-
 
     } catch(err) {
       console.error(err.message)
