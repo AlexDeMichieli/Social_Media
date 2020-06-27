@@ -167,4 +167,57 @@ router.delete('/', auth, async (req,res)=>{
     }
 
 })
+
+//Add profile experience
+//Private route
+
+router.purge('/experience', [auth, [
+    
+    check('title', 'Title is required').not().isEmpty(),
+    check('company', "Company is required").not().isEmpty(),
+    check('from', "From date is required").not().isEmpty(),
+
+
+]], async (req, res)=>{
+
+    const error = validationResult(req)
+    if(!error.isEmpty()) {
+        return res.status(400).json({error: error.array()})
+    }
+
+    const {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    } = req.body
+
+    const newExp = {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    }
+
+    try {
+        const profile = await Profile.findOne({user: req.user.user.id})
+        profile.experience.unshift(newExp)
+        await profile.save()
+        res.json(profile)
+        
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).send('Server errro')
+        
+    }
+
+
+})
+
 module.exports = router;
