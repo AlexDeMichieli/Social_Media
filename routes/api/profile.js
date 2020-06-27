@@ -121,7 +121,7 @@ router.get('/', async (req,res)=>{
 
 })
 
-//Get profile bu user ID
+//Get profile by user ID
 //Public route
 
 router.get('/user/:user_id', async (req,res)=>{
@@ -142,6 +142,28 @@ router.get('/user/:user_id', async (req,res)=>{
         }
         res.status.send('Server Error')
 
+    }
+
+})
+
+//Delete profile, user & posts
+//Private route
+
+router.delete('/', auth, async (req,res)=>{
+
+    try {
+        //Remove profile
+        await Profile.findOneAndRemove({user: req.user.user.id})
+
+        //Remove user
+        await User.findOneAndRemove({_id: req.user.user.id})
+
+        res.json({msg: 'User and Profile deleted'})
+        // console.log(user)
+
+    } catch (error) {
+        console.error(error.message)
+        res.status.send('Server Error')
     }
 
 })
