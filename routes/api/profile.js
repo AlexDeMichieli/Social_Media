@@ -66,7 +66,7 @@ const profileFields = {}
 profileFields.user = req.user.user.id
 
 if(company) profileFields.company = company
-if(website) profileFields.company = website
+if(website) profileFields.website = website
 if(location) profileFields.location = location
 if(status) profileFields.status = status
 if(skills) {
@@ -82,6 +82,8 @@ if(youtube) profileFields.social.youtube = youtube
 if(twitter) profileFields.social.twitter = twitter
 if(facebook) profileFields.social.facebook = facebook
 if(linkedin) profileFields.social.linkedin = linkedin
+if(instagram) profileFields.social.instagram = instagram
+
 
 try {
     let profile = await Profile.findOne({user: req.user.user.id});
@@ -171,7 +173,7 @@ router.delete('/', auth, async (req,res)=>{
 //Add profile experience
 //Private route
 
-router.purge('/experience', [auth, [
+router.put('/experience', [auth, [
     
     check('title', 'Title is required').not().isEmpty(),
     check('company', "Company is required").not().isEmpty(),
@@ -206,6 +208,8 @@ router.purge('/experience', [auth, [
     }
 
     try {
+
+        //unshift add an additional profile
         const profile = await Profile.findOne({user: req.user.user.id})
         profile.experience.unshift(newExp)
         await profile.save()
@@ -213,11 +217,52 @@ router.purge('/experience', [auth, [
         
     } catch (error) {
         console.error(error.message)
-        res.status(500).send('Server errro')
+        res.status(500).send('Server Error')
         
     }
+})
+
+//Updates experience
+
+router.put('/experience/:exp_id', auth, async (req, res)=> {
+
+
+    const {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    } = req.body
+
+
+    try {
+        // const result = profile.experience.find( ({ _id }) => _id == req.params.exp_id);
+
+        const profile = await Profile.findOne({user: req.user.user.id})
+        const index = profile.experience.map(item => item.id).indexOf(req.params.exp_id)
+        profile.experience[index] = req.body
+        await  profile.save()
+        res.json(profile)
+
+        //working also
+
+        // let profile = await Profile.findOneAndUpdate(
+        //     { experience: { $elemMatch: { _id: req.params.exp_id } } },
+        //     { $set: { 'experience.$': req.body } },
+        //     { new: true }
+        // );
+
+    } catch(error){
+        console.error(error.message)
+        res.status(500).send('Server Error')
+  } 
+
+
+//Removes experience
 
 
 })
-
 module.exports = router;
