@@ -260,9 +260,25 @@ router.put('/experience/:exp_id', auth, async (req, res)=> {
         res.status(500).send('Server Error')
   } 
 
+})
 
 //Removes experience
 
+router.delete('/experience/:exp_id', auth, async (req, res)=> {
 
+    try {
+        // const result = profile.experience.find( ({ _id }) => _id == req.params.exp_id);
+
+        const profile = await Profile.findOne({user: req.user.user.id})
+        const index = profile.experience.map(item => item.id).indexOf(req.params.exp_id)
+        profile.experience.splice(index, 1)
+        await profile.save()
+        res.json(profile)
+
+    } catch(error){
+        console.error(error.message)
+        res.status(500).send('Server Error')
+  }
 })
+
 module.exports = router;
