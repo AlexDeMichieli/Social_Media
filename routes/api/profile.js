@@ -64,10 +64,9 @@ router.post('/', [auth,
 //Build profile Object
 const profileFields = {}
 profileFields.user = req.user.user.id
-console.log(profileFields.company)
 
 if(company) profileFields.company = company
-if(website) profileFields.company = website
+if(website) profileFields.website = website
 if(location) profileFields.location = location
 if(status) profileFields.status = status
 if(skills) {
@@ -83,6 +82,8 @@ if(youtube) profileFields.social.youtube = youtube
 if(twitter) profileFields.social.twitter = twitter
 if(facebook) profileFields.social.facebook = facebook
 if(linkedin) profileFields.social.linkedin = linkedin
+if(instagram) profileFields.social.instagram = instagram
+
 
 try {
     let profile = await Profile.findOne({user: req.user.user.id});
@@ -107,4 +108,161 @@ try {
 }
 })
 
+//Get all profiles
+//Public route
+
+router.get('/', async (req,res)=>{
+
+    try {
+        const profiles = await Profile.find().populate('user', ['name', 'avatar'])
+        res.json(profiles)
+    } catch (error) {
+        console.error(error.message)
+        res.status.send('Server Error')
+    }
+
+})
+
+//Get profile by user ID
+//Public route
+
+router.get('/user/:user_id', async (req,res)=>{
+
+    try {
+        const profile = await Profile.findOne({user: req.params.user_id})
+        .populate('user', ['name', 'avatar'])
+        console.log(profile)
+        if(!profile){
+            return res.status(400).json({msg: "Profile not found"})
+        }
+        res.json(profile)
+
+    } catch (err) {
+        console.error(err.message)
+        if (err.kind == 'ObjectId'){
+            return res.status(400).json({msg: "Profile not found"})
+        }
+        res.status.send('Server Error')
+
+    }
+
+})
+
+//Delete profile, user & posts
+//Private route
+
+router.delete('/', auth, async (req,res)=>{
+
+    try {
+        //Remove profile
+        await Profile.findOneAndRemove({user: req.user.user.id})
+
+        //Remove user
+        await User.findOneAndRemove({_id: req.user.user.id})
+
+        res.json({msg: 'User and Profile deleted'})
+        // console.log(user)
+
+    } catch (error) {
+        console.error(error.message)
+        res.status.send('Server Error')
+    }
+
+})
+
+//Add profile experience
+//Private route
+
+router.put('/experience', [auth, [
+    
+    check('title', 'Title is required').not().isEmpty(),
+    check('company', "Company is required").not().isEmpty(),
+    check('from', "From date is required").not().isEmpty(),
+
+
+]], async (req, res)=>{
+
+    const error = validationResult(req)
+    if(!error.isEmpty()) {
+        return res.status(400).json({error: error.array()})
+    }
+
+    const {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    } = req.body
+
+    const newExp = {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    }
+
+    try {
+
+        //unshift add an additional profile
+        const profile = await Profile.findOne({user: req.user.user.id})
+        profile.experience.unshift(newExp)
+        await profile.save()
+        res.json(profile)
+        
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).send('Server Error')
+        
+    }
+})
+
+//Updates experience
+
+router.put('/experience/:exp_id', auth, async (req, res)=> {
+
+
+    const {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+    } = req.body
+
+
+    try {
+        // const result = profile.experience.find( ({ _id }) => _id == req.params.exp_id);
+
+        const profile = await Profile.findOne({user: req.user.user.id})
+        const index = profile.experience.map(item => item.id).indexOf(req.params.exp_id)
+        profile.experience[index] = req.body
+        await  profile.save()
+        res.json(profile)
+
+        //working also
+
+        // let profile = await Profile.findOneAndUpdate(
+        //     { experience: { $elemMatch: { _id: req.params.exp_id } } },
+        //     { $set: { 'experience.$': req.body } },
+        //     { new: true }
+        // );
+
+    } catch(error){
+        console.error(error.message)
+        res.status(500).send('Server Error')
+  } 
+
+
+//Removes experience
+
+
+})
 module.exports = router;
