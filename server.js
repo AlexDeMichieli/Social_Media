@@ -11,6 +11,8 @@ connectDB()
 
 //Initialise Middleware
 app.use(express.json({extended: false}))
+//app.use(bodyParser.json())
+
 
 app.get('/', (req, res)=> res.send('API RUNNING'))
 
