@@ -420,7 +420,7 @@ router.get('/github/:username', async (req, res)=>{
 
         } catch (err) {
           console.error(err.message);
-          return res.status(404).json({ msg: 'No Github profile found' });
+          res.status(404).json({ msg: 'No Github profile found' });
         }
 
 })
