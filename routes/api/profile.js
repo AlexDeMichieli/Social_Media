@@ -3,9 +3,9 @@ const router = express.Router()
 const auth = require('../../middleware/auth')
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
+const request = require('request')
 const {check, validationResult} = require('express-validator/check');
-
-
+const axios = require('axios')
 
 //private
 //get current users profile
@@ -317,7 +317,7 @@ router.put('/education', [auth, [
         description
     } = req.body
 
-    const newEdu = {
+    const newExp = {
         school,
         degree,
         fieldofstudy,
@@ -331,7 +331,7 @@ router.put('/education', [auth, [
 
         //unshift add an additional profile
         const profile = await Profile.findOne({user: req.user.user.id})
-        profile.education.unshift(newEdu)
+        profile.education.unshift(newExp)
         await profile.save()
         res.json(profile)
         
@@ -398,15 +398,31 @@ router.delete('/education/:edu_id', auth, async (req, res)=> {
   }
 })
 
+//Get Github profile 
+//GET api/profile/github/:username
+//public route
+
+router.get('/github/:username', async (req, res)=>{
+    try {
 
 
+        const uri = encodeURI(
+            `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`
+          );
+        //   const headers = {
+        //     'user-agent': 'node.js',
+        //     Authorization: `token ${process.env.githubToken}`
+        //   };
+      
+        //   const gitHubResponse = await axios.get(uri, { headers });
+        const gitHubResponse = await axios.get(uri);
+        res.json(gitHubResponse.data);
 
+        } catch (err) {
+          console.error(err.message);
+          return res.status(404).json({ msg: 'No Github profile found' });
+        }
 
-
-
-
-
-
-
+})
 
 module.exports = router;
