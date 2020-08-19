@@ -1,6 +1,6 @@
-const moongoose = require ('mongoose')
+const mongoose = require ('mongoose')
 
-const PostSchema = new moongoose.Schema({
+const PostSchema = new mongoose.Schema({
 
     user :{
         type: mongoose.Schema.Types.ObjectId,
@@ -38,13 +38,13 @@ const PostSchema = new moongoose.Schema({
         },
         date: {
             type: Date,
-            default: date.now
+            default: Date.now
         }
     }],
     date: {
         type: Date,
-        default: date.now
+        default: Date.now
     }
 });
 
-module.exports = Post = moongoose.model('post', PostSchema)
+module.exports = Post = mongoose.model('post', PostSchema)
