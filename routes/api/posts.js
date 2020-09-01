@@ -38,8 +38,6 @@ async (req,res) => {
         res.status(500).send('Server Error')
 
     }
-    
-    
 })
 
 //Get all posts
@@ -65,8 +63,7 @@ router.get('/:id', auth, async(req,res)=>{
 
     try {
         const post =  await Post.findById(req.params.id);
-        console.log('USER ID',req.user.user.id)
-        console.log('USER ID',post)
+     
 
         res.json(post)
         if(!post){
@@ -83,29 +80,103 @@ router.get('/:id', auth, async(req,res)=>{
 
 })
 
-//Detele Post by ID
+//Delete Post by ID
 //private
 
-// router.delete('/:id', auth, async(req,res)=>{
+router.delete('/:id', auth, async(req,res)=>{
 
-//     try {
+    try {
 
-//         //check that post belongs to user
+        //check that post belongs to user
 
-//         const post =  await Post.findById(req.params.id);
-//         res.json(post)
-//         if(!post){
-//             return res.status(404).json({message: 'post not found'})
-//         }
+        const post =  await Post.findById(req.params.id);
+
+        if(!post){
+            return res.status(404).json({message: 'Post not found'})
+        }
+
+        //Check user
+        if(post.user.toString() !== req.user.user.id){
+            return res.status(401).json({message: 'User not authorized'})
+        }else{
+            await post.remove()
+
+            res.json({'message': 'Post removed'})
+        }
         
-//     } catch (error) {
-//         console.error(error.message)
-//         if(error.kind === 'ObjectId'){
-//             return res.status(404).json({message: 'post not found'})
-//         }
-//         res.status(500).send('Server Error')   
-//     }
+    } catch (error) {
+        console.error(error.message)
+        if(error.kind === 'ObjectId'){
+            return res.status(404).json({message: 'Post not found'})
+        }
+        res.status(500).send('Server Error')   
+    }
 
-// })
+})
+
+//Like a Post
+//private
+
+router.put('/like/:id', auth, async(req,res)=>{
+
+    try {
+        const post = await Post.findById(req.params.id)
+        let match = 0
+
+        //check if post hasn't been liked
+        for (let key in post.likes){
+            if (post.likes[key].user.toString() === req.user.user.id){
+                match ++
+            }
+        }
+        if (match > 0){
+            return res.status(400).json({message: 'Post already liked'})
+        }else{
+            post.likes.unshift({user: req.user.user.id})
+            await post.save()
+            res.json(post.likes)
+        }
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+        
+    }
+})
+
+//Unlike a Post
+//private
+
+router.put('/unlike/:id', auth, async(req,res)=>{
+
+    try {
+        const post = await Post.findById(req.params.id)
+        let match = 0
+
+        //check if post hasn't been liked
+        for (let key in post.likes){
+            if (post.likes[key].user.toString() === req.user.user.id){
+                match ++
+            }
+        }
+        if (match === 0){
+            return res.status(400).json({message: 'Post has not been liked'})
+        }else{
+            //getting the index of the like by user
+            const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.user.id)
+            post.likes.splice(removeIndex, 1)
+            await post.save()
+            res.json({"msg": "Post unliked"})
+            console.log(post.likes)
+
+
+        }
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+        
+    }
+})
 
 module.exports = router;
