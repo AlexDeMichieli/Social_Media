@@ -3,7 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const connectDB = require ('./config/db')
-const cors = require('cors');
+// const cors = require('cors');
 
 const app = express()
 
@@ -12,7 +12,7 @@ connectDB()
 
 //Initialise Middleware
 app.use(express.json({extended: false}))
-app.use(cors())
+// app.use(cors())
 //app.use(bodyParser.json())
 
 
