@@ -1,9 +1,14 @@
 import React, {Fragment, useState, useEffect} from 'react'
 import axios from 'axios'
 import {Link} from 'react-router-dom'
+import PropTypes from 'prop-types';
+//Redux
+import {connect} from 'react-redux'
+import {setAlert} from '../../actions/alert'
 
-const Register = () => {
+const Register = (props) => {
 
+    console.log(props)
     const initialState = {
         name: "",
         email: "",
@@ -25,7 +30,8 @@ const Register = () => {
     const handleSubmit = async e => {
         e.preventDefault();
         if(form.password !== form.passwordConfirmation){
-            console.log("passwords don't match")
+            //passes attributes in parenthesis to alert.js in folder 'actions'
+            props.setAlert("passwords don't match", 'danger')
         }else{
             clearState();
             console.log(form);
@@ -95,4 +101,10 @@ const Register = () => {
     )
 }
 
-export default Register
+Register.propTypes ={
+    setAlert: PropTypes.func.isRequired,
+}
+
+//connect is connecting Register.js to alert.js in folder actions
+//setAlert is passed in as a prop, which 
+export default connect(null, {setAlert})(Register)

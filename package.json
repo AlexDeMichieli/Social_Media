@@ -31,6 +31,8 @@
     "http-proxy-middleware": "^1.0.5",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.14",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5",
     "request": "^2.88.2"
   },
   "devDependencies": {
