@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 const Alert = ({ alerts }) => {
-  console.log(alerts.length);
 
   const errorBanner =
     alerts !== null &&

@@ -10,7 +10,6 @@ const initialstate = {
 export default function(state = initialstate, action) {
 
     const {type, payload} = action
-å
     switch(type){
         case REGISTER_SUCCESS:
             //setting the token
@@ -26,7 +25,7 @@ export default function(state = initialstate, action) {
             return {
                 ...state,
                 token: null,
-                isAuthenticated: falls,
+                isAuthenticated: false,
                 loading: false
             }
         default:
@@ -34,4 +33,3 @@ export default function(state = initialstate, action) {
     }
 }
 
-}

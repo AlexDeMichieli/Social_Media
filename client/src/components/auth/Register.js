@@ -40,7 +40,8 @@ const Register = ({setAlert, register}) => {
         email: form.email,
         password: form.password,
       };
-      register(form.name, form.email, form.password)
+      console.log(form.name, form.email)
+      register(newUser)
     }
   };
 
@@ -57,8 +58,9 @@ const Register = ({setAlert, register}) => {
             value={form.name}
             placeholder="Name"
             onChange={onChange}
-            name="name"
+            name="name" 
             required
+            
           />
         </div>
         <div className="form-group">
@@ -68,6 +70,7 @@ const Register = ({setAlert, register}) => {
             onChange={onChange}
             placeholder="Email Address"
             name="email"
+            required
           />
           <small className="form-text">
             This site uses Gravatar so if you want a profile image, use a
