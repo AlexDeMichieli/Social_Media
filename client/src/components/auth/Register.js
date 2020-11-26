@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 //Redux
 import { connect } from "react-redux";
@@ -8,7 +8,7 @@ import { setAlert } from "../../actions/alert";
 import { register } from "../../actions/auth";
 
 
-const Register = ({setAlert, register}) => {
+const Register = ({setAlert, register, isAuthenticated}) => {
 
   const initialState = {
     name: "",
@@ -44,6 +44,10 @@ const Register = ({setAlert, register}) => {
       register(newUser)
     }
   };
+
+  if(isAuthenticated){
+    return <Redirect to='/dashboard'/>
+  }
 
   return (
     <Fragment>
@@ -109,9 +113,15 @@ const Register = ({setAlert, register}) => {
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 };
 
 //connect is connecting Register.js to alert.js in folder actions
 //the setAlert action is passed in as a prop, which is destructured above and called when passwords don't match.
 //The action returns a payload (which is passed in to the component)
-export default connect(null, { setAlert, register })(Register);
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps, { setAlert, register })(Register);
