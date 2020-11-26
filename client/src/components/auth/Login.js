@@ -1,8 +1,10 @@
 import React, {Fragment, useState, useEffect} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
+import {login} from '../../actions/auth'
 
-
-const Login = () => {
+const Login = ({login, isAuthenticated}) => {
 
     const initialState = {
         email: "",
@@ -15,6 +17,10 @@ const Login = () => {
         setForm({ ...initialState });
     };
 
+    if(isAuthenticated){
+        return <Redirect to='/dashboard'/>
+    }
+
     const onChange = event => {
         const { name, value } = event.target;
         setForm(state => ({ ...state, [name]: value }));
@@ -22,7 +28,8 @@ const Login = () => {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        console.log('Success')
+        login(form.email, form.password)
+        clearState()
        
     };
 
@@ -45,7 +52,7 @@ const Login = () => {
                     minLength="6"
                 />
                 </div>
-                <input type="submit" className="btn btn-primary" value="Register" />
+                <input type="submit" className="btn btn-primary" value="Login" />
             </form>
             <p className="my-1">
                 Don't have an account? <Link to="/register">Sign Up</Link>
@@ -54,4 +61,15 @@ const Login = () => {
     )
 }
 
-export default Login
+login.PropTypes = {
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+
+
+export default connect(mapStateToProps, {login})(Login)
