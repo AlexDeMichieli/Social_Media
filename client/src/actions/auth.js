@@ -6,7 +6,8 @@ import {
   AUTH_ERROR,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
-  LOGOUT
+  LOGOUT,
+  CLEAR_PROFILE
 } from "./types";
 import { setAlert } from "./alert";
 import setAuthToken from "../utils/setAuthToken";
@@ -42,7 +43,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
-    // dispatch(loadUser())
+    dispatch(loadUser())
   } catch (err) {
     //using the alert action, which takes the registration errors and pushes them to the component
     const errors = err.response.data.errors;
@@ -71,7 +72,7 @@ export const login = ( email, password ) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
-    // dispatch(loadUser())
+    dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -87,5 +88,7 @@ export const login = ( email, password ) => async (dispatch) => {
 // Logout / Clear Profile
 
 export const logout = () => dispatch => {
+  dispatch({type: CLEAR_PROFILE})
   dispatch({type: LOGOUT})
+
 }
