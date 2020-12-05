@@ -20,7 +20,6 @@ export const loadUser = () => async (dispatch) => {
   }
   try {
     const res = await axios.get("/api/auth");
-    console.log('RES',res, res.data)
     dispatch({ type: USER_LOADED, payload: res.data });
   } catch (error) {
     dispatch({ type: AUTH_ERROR });
@@ -43,6 +42,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
+    //works when switching between pages or logging in/out
     dispatch(loadUser())
   } catch (err) {
     //using the alert action, which takes the registration errors and pushes them to the component
@@ -72,6 +72,7 @@ export const login = ( email, password ) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
+    //works when switching between pages or logging in/out
     dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors;
