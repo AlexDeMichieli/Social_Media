@@ -39,11 +39,11 @@ const EditProfile = ({
       bio: loading || !profile ? " " : profile && profile.bio,
       githubusername:
       loading || !profile ? " " : profile && profile.githubusername,
-      youtube: loading || !profile ? " " : profile && profile.youtube,
-      twitter:  loading || !profile ? " " : profile && profile.twitter,
-      facebook:  loading || !profile ? " " : profile && profile.facebook,
-     linkedin:  loading || !profile ? " " : profile && profile.linkedin,
-       instagram:  loading || !profile ? " " : profile && profile.instagram,
+      youtube: loading || !profile ? " " : profile && profile.social.youtube,
+      twitter:  loading || !profile ? " " : profile && profile.social.twitter,
+      facebook:  loading || !profile ? " " : profile && profile.social.facebook,
+     linkedin:  loading || !profile ? " " : profile && profile.social.linkedin,
+       instagram:  loading || !profile ? " " : profile && profile.social.instagram,
     });
   }, [loading, update]);
 
