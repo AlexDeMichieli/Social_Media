@@ -35,7 +35,7 @@ const ProfileForm = ({
       const profileData = { ...initialState };
       for (const key in profile) {
         if (key in profileData) profileData[key] = profile[key];
-         console.log( profileData[key])
+         console.log( 'PR DATA',profileData[key] )
       }
       for (const key in profile.social) {
         if (key in profileData) profileData[key] = profile.social[key];
