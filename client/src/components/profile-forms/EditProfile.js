@@ -1,51 +1,50 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { Link, withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { createProfile, getCurrentProfile } from "../../actions/profile";
+import React, { Fragment, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
-const EditProfile = ({
+const initialState = {
+  company: '',
+  website: '',
+  location: '',
+  status: '',
+  skills: '',
+  githubusername: '',
+  bio: '',
+  twitter: '',
+  facebook: '',
+  linkedin: '',
+  youtube: '',
+  instagram: ''
+};
+
+const ProfileForm = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
-  history,
+  history
 }) => {
-  const [formData, setFormData] = useState({
-    company: "",
-    website: "",
-    location: "",
-    status: "",
-    skills: "",
-    bio: "",
-    githubusername: "",
-    youtube: "",
-    twitter: "",
-    facebook: "",
-    linkedin: "",
-    instagram: "",
-  });
+  const [formData, setFormData] = useState(initialState);
+
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
-  const [update, setUpdate] = useState(false)
+
   useEffect(() => {
-    getCurrentProfile();
-    console.log('getting profile')
-    console.log('PROFILE', profile && profile.company)
-    setFormData({
-      company: loading || !profile ? " " : profile.company,
-      website:  loading || !profile ? " " : profile && profile.website,
-      location: loading || !profile ? " " : profile && profile.location,
-      status: loading || !profile ? " " : profile && profile.status,
-      skills: loading || !profile ? " " : profile && profile.skills.join(","),
-      bio: loading || !profile ? " " : profile && profile.bio,
-      githubusername:
-      loading || !profile ? " " : profile && profile.githubusername,
-      youtube: loading || !profile ? " " : profile && profile.social.youtube,
-      twitter:  loading || !profile ? " " : profile && profile.social.twitter,
-      facebook:  loading || !profile ? " " : profile && profile.social.facebook,
-     linkedin:  loading || !profile ? " " : profile && profile.social.linkedin,
-       instagram:  loading || !profile ? " " : profile && profile.social.instagram,
-    });
-  }, [loading, update]);
+    if (!profile) getCurrentProfile();
+    if (!loading && profile) {
+      const profileData = { ...initialState };
+      for (const key in profile) {
+        if (key in profileData) profileData[key] = profile[key];
+         console.log( 'PR DATA',profileData[key] )
+      }
+      for (const key in profile.social) {
+        if (key in profileData) profileData[key] = profile.social[key];
+      }
+      if (Array.isArray(profileData.skills))
+        profileData.skills = profileData.skills.join(', ');
+      setFormData(profileData);
+    }
+  }, [loading, getCurrentProfile, profile]);
 
   const {
     company,
@@ -53,24 +52,23 @@ const EditProfile = ({
     location,
     status,
     skills,
-    bio,
     githubusername,
-    youtube,
+    bio,
     twitter,
     facebook,
     linkedin,
-    instagram,
+    youtube,
+    instagram
   } = formData;
 
-  const onChange = (e) =>
+  const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = e => {
     e.preventDefault();
-    createProfile(formData, history, true);
-    console.log('submitted')
-    setUpdate(!update)
+    createProfile(formData, history, profile ? true : false);
   };
+
   return (
     <Fragment>
       <h1 className="large text-primary">Edit Your Profile</h1>
@@ -245,15 +243,16 @@ const EditProfile = ({
   );
 };
 
-EditProfile.propTypes = {
+ProfileForm.propTypes = {
   createProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
+  profile: state.profile
 });
+
 export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  withRouter(EditProfile)
+  ProfileForm
 );

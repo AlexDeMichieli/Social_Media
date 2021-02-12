@@ -26,7 +26,8 @@ export const loadUser = () => async (dispatch) => {
   }
 };
 
-//Register user
+//Register user. Received token and sets in local storage.
+//uses loaduser to set the token in storage and loads the user
 export const register = ({ name, email, password }) => async (dispatch) => {
   const config = {
     headers: {
