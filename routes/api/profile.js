@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
+const Post = require("../../models/Post");
 const request = require("request");
 const { check, validationResult } = require("express-validator/check");
 const axios = require("axios");
@@ -142,22 +143,24 @@ router.get("/user/:user_id", async (req, res) => {
   }
 });
 
-//Delete profile, user & posts
-//Private route
-
-router.delete("/", auth, async (req, res) => {
+// @route    DELETE api/profile
+// @desc     Delete profile, user & posts
+// @access   Private
+router.delete('/', auth, async (req, res) => {
   try {
-    //Remove profile
-    await Profile.findOneAndRemove({ user: req.user.user.id });
+    // Remove user posts
+    // Remove profile
+    // Remove user
+    await Promise.all([
+      Post.deleteMany({ user: req.user.user.id }),
+      Profile.findOneAndRemove({ user: req.user.userid }),
+      User.findOneAndRemove({ _id: req.user.userid })
+    ]);
 
-    //Remove user
-    await User.findOneAndRemove({ _id: req.user.user.id });
-
-    res.json({ msg: "User and Profile deleted" });
-    // console.log(user)
-  } catch (error) {
-    console.error(error.message);
-    res.status.send("Server Error");
+    res.json({ msg: 'User deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 
