@@ -16,7 +16,7 @@ const Dashboard = ({
 }) => {
   useEffect(() => {
     getCurrentProfile();
-  }, []);
+  }, [getCurrentProfile]);
   console.log("USER", user && user.user.name);
   return (
     <div>
