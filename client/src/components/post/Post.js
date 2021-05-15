@@ -18,17 +18,6 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
       setAuthToken(localStorage.token);
     }
     loadUser();
-
-    async function fetchPost (){
-      try {
-        const res = await Axios.get(`http://localhost:3000/api/posts/${match.params.id}`);
-        console.log(res)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchPost()
-    console.log(match.params.id)
     getPost(match.params.id);
   }, [getPost, match.params.id]);
   
