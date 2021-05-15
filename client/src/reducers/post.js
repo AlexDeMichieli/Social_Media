@@ -27,6 +27,7 @@ import {
           loading: false
         };
       case GET_POST:
+        console.log('getting post')
         return {
           ...state,
           post: payload,

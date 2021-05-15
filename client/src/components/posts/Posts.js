@@ -4,15 +4,11 @@ import { connect } from 'react-redux';
 import PostItem from './PostItem';
 import PostForm from './PostForm';
 import { getPosts } from '../../actions/post';
-import { loadUser } from "../../actions/auth";
-import { getCurrentProfile } from "../../actions/profile";
 const Posts = ({ getPosts, post: { posts } }) => {
   useEffect(() => {
-    // loadUser()
-    // getCurrentProfile()
+
     getPosts();
   }, []);
-
   return (
     <Fragment>
       <h1 className="large text-primary">Posts</h1>

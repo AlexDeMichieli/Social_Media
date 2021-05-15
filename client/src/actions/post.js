@@ -19,7 +19,6 @@ export const getPosts = () => async (dispatch) => {
       setAuthToken(localStorage.token);
     }
     const res = await axios.get("api/posts");
-    console.log(res.data);
     dispatch({
       type: GET_POSTS,
       payload: res.data,
