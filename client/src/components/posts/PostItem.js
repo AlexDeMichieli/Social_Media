@@ -12,7 +12,9 @@ const PostItem = ({
   auth,
   post: { _id, text, name, avatar, user, likes, comments, date },
   showActions
-}) => (
+}) => {
+  return (
+  
   <div className="post bg-white p-1 my-1">
     <div>
       <Link to={`/profile/${user}`}>
@@ -47,7 +49,7 @@ const PostItem = ({
               <span className="comment-count">{comments.length}</span>
             )}
           </Link>
-          {!auth.loading && user === auth.user._id && (
+          {!auth.loading && user ===  auth.user.user._id && (
             <button
               onClick={() => deletePost(_id)}
               type="button"
@@ -60,7 +62,8 @@ const PostItem = ({
       )}
     </div>
   </div>
-);
+  )
+};
 
 PostItem.defaultProps = {
   showActions: true

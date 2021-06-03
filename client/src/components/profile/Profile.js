@@ -9,11 +9,17 @@ import ProfileExperience from './ProfileExperience';
 import ProfileEducation from './ProfileEducation';
 import ProfileGithub from './ProfileGithub';
 import { getProfileById } from '../../actions/profile';
+import { loadUser } from "../../actions/auth";
+import setAuthToken from '../../utils/setAuthToken'
 
 const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
   useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    loadUser();
     //gets the user id from the url and returns the profile
-    console.log('MATCH PARAMS ID',match)
+    console.log('params', match.params.id)
     getProfileById(match.params.id);
   }, [getProfileById, match.params.id]);
 

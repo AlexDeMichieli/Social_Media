@@ -19,7 +19,6 @@ export const getPosts = () => async (dispatch) => {
       setAuthToken(localStorage.token);
     }
     const res = await axios.get("api/posts");
-    console.log(res.data);
     dispatch({
       type: GET_POSTS,
       payload: res.data,
@@ -107,7 +106,7 @@ export const addPost = (formData) => async (dispatch) => {
 // Get post
 export const getPost = (id) => async (dispatch) => {
   try {
-    const res = await axios.get(`api/posts/${id}`);
+    const res = await axios.get(`/api/posts/${id}`);
 
     dispatch({
       type: GET_POST,
@@ -124,7 +123,7 @@ export const getPost = (id) => async (dispatch) => {
 // Add comment
 export const addComment = (postId, formData) => async (dispatch) => {
   try {
-    const res = await axios.post(`api/posts/comment/${postId}`, formData);
+    const res = await axios.post(`/api/posts/comment/${postId}`, formData);
 
     dispatch({
       type: ADD_COMMENT,
@@ -143,7 +142,7 @@ export const addComment = (postId, formData) => async (dispatch) => {
 // Delete comment
 export const deleteComment = (postId, commentId) => async (dispatch) => {
   try {
-    await axios.delete(`api/posts/comment/${postId}/${commentId}`);
+    await axios.delete(`/api/posts/comment/${postId}/${commentId}`);
 
     dispatch({
       type: REMOVE_COMMENT,
