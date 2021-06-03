@@ -34,7 +34,7 @@
 
 ## About The Project
 
-The Dev Connector is a small social media platform that allows developers create a profile, connect with other developers and write posts.
+The Dev Connector is a small social media platform that allows developers create a profile, connect with one another, write and like posts.
 
 ### Built With
 
