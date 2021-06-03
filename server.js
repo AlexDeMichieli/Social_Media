@@ -3,6 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const connectDB = require ('./config/db')
+const path = require('path');
 
 const app = express()
 
@@ -23,11 +24,13 @@ app.use('/api/posts', require ('./routes/api/posts'))
 app.use('/api/auth', require ('./routes/api/auth'))
 
 if (process.env.NODE_ENV === 'production') {
-    // Serve any static files
-    app.use(express.static(path.join(__dirname, 'client/build')));
-  // Handle React routing, return all requests to React app
-    app.get('*', function(req, res) {
-      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    // Set static folder
+    app.use(express.static('client/build'));
+  
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
   }
+
+  
   app.listen(PORT, ()=> console.log('listening'))
