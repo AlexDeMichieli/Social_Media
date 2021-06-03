@@ -13,16 +13,21 @@ connectDB()
 app.use(express.json({extended: false}))
 //app.use(bodyParser.json())
 
-
-// app.get('/', (req, res)=> res.send('API RUNNING'))
-
 //Setting port
 const PORT = process.env.PORT || 5000
-app.listen(PORT, ()=> console.log('listening'))
-app.use(express.static(__dirname + '/client/public'));
 
 //Import Routes
 app.use('/api/users', require ('./routes/api/users'))
 app.use('/api/profile', require ('./routes/api/profile'))
 app.use('/api/posts', require ('./routes/api/posts'))
 app.use('/api/auth', require ('./routes/api/auth'))
+
+if (process.env.NODE_ENV === 'production') {
+    // Serve any static files
+    app.use(express.static(path.join(__dirname, 'client/build')));
+  // Handle React routing, return all requests to React app
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+  }
+  app.listen(PORT, ()=> console.log('listening'))
