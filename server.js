@@ -19,7 +19,7 @@ app.use(express.json({extended: false}))
 //Setting port
 const PORT = process.env.PORT || 5000
 app.listen(PORT, ()=> console.log('listening'))
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/client/public'));
 
 //Import Routes
 app.use('/api/users', require ('./routes/api/users'))
