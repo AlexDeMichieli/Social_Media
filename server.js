@@ -14,11 +14,12 @@ app.use(express.json({extended: false}))
 //app.use(bodyParser.json())
 
 
-app.get('/', (req, res)=> res.send('API RUNNING'))
+// app.get('/', (req, res)=> res.send('API RUNNING'))
 
 //Setting port
 const PORT = process.env.PORT || 5000
 app.listen(PORT, ()=> console.log('listening'))
+app.use(express.static(__dirname + '/public'));
 
 //Import Routes
 app.use('/api/users', require ('./routes/api/users'))
